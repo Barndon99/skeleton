@@ -1,34 +1,37 @@
-import { defineConfig } from "vite";
-import legacy from "@vitejs/plugin-legacy";
-import { swcReactRefresh } from "vite-plugin-swc-react-refresh";
-import tsconfigPaths from "vite-tsconfig-paths";
-import mkcert from "vite-plugin-mkcert";
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+import checker from 'vite-plugin-checker';
+import svgrPlugin from 'vite-plugin-svgr';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
-export default defineConfig(() => {
-  return {
-    server: {
-      https: true,
-    },
-    plugins: [
-      swcReactRefresh(),
-      tsconfigPaths(),
-      legacy(),
-      mkcert({
-        source: "coding",
-      }),
-    ],
-    esbuild: { jsx: "automatic" },
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            "react-vendor": ["react", "react-dom", "react-router-dom"],
-          },
-        },
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    react(),
+    checker({
+      overlay: false,
+      typescript: true,
+    }),
+    svgrPlugin({
+      svgrOptions: {
+        icon: true,
+        // ...svgr options (https://react-svgr.com/docs/options/)
       },
-    },
-    optimizeDeps: {
-      include: ["react/jsx-runtime"],
-    },
-  };
+    }),
+    tsconfigPaths(),
+  ],
+  server: {
+    port: 3030,
+    open: true,
+    host: true,
+    strictPort: true,
+  },
+  build: {
+    outDir: 'build',
+    sourcemap: true,
+  },
+  preview: {
+    strictPort: true,
+  },
+  envPrefix: 'REACT_APP_',
 });
