@@ -1,0 +1,16 @@
+version: "2.4"
+
+services:
+  database:
+    image: postgres:13.2-alpine
+    container_name: database
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRESQL_FSYNC=off
+    ports:
+      - 5432:5432
+    volumes:
+      - ./.data/pg/:/var/lib/postgresql/data
+      - ./.db/init:/docker-entrypoint-initdb.d
